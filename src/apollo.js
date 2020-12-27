@@ -1,8 +1,32 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache
+} from '@apollo/client';
 
 const apolloClient = new ApolloClient({
-  uri : 'http://localhost:4000/',
-  cache: new InMemoryCache()
-})
-
+  uri: 'http://localhost:4000/',
+  cache: new InMemoryCache(),
+  resolvers: {
+    Movie: {
+      isLiked: () => false
+    },
+    Mutation: {
+      toggleLikeMovie: (_, {id,isLiked}, {cache}) => {
+        const myMovie = {
+          __typename: 'Movie',
+          id: `${id}`,
+          isLiked: `${isLiked}`,
+        };
+        cache.modify({
+          id: cache.identify(myMovie),
+          fields: {
+            isLiked(cachedName) {
+              return !isLiked;
+            },
+          },
+        });
+      },
+    },
+  },
+});
 export default apolloClient

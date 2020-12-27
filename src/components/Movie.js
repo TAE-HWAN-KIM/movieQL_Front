@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { gql } from '@apollo/client';
-//import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client/react/hooks";
 
 // export default ({
 //         id,
@@ -10,11 +10,11 @@ import { gql } from '@apollo/client';
 //         bg
 // }) => <div><img src={bg}></img><h1>{id}</h1><h1>{isLiked}</h1></div>
 
-// const LIKE_MOVIE = gql`
-//   mutation toggleLikeMovie($id: Int!, $isLiked: Boolean!) {
-//     toggleLikeMovie(id: $id, isLiked: $isLiked) @apolloClient
-//   }
-// `;
+const LIKE_MOVIE = gql`
+  mutation toggleLikeMovie($id: Int!, $isLiked: Boolean!) {
+    toggleLikeMovie(id: $id, isLiked: $isLiked) @client
+  }
+`;
 
 const Container = styled.div`
   height: 400px;
@@ -35,15 +35,15 @@ const Poster = styled.div`
 `;
 
 export default ({ id, bg, isLiked }) => {
-//   const [toggleMovie] = useMutation(LIKE_MOVIE, {
-//     variables: { id: parseInt(id), isLiked }
-//   });
+  const [toggleMovie] = useMutation(LIKE_MOVIE, {
+    variables: { id: parseInt(id) , isLiked}
+  });
   return (
     <Container>
       <Link to={`/${id}`}>
         <Poster bg={bg} />
       </Link>
-      {/* <button onClick={toggleMovie}>{isLiked ? "Unlike" : "Like"}</button> */}
+      <button onClick={toggleMovie}>{isLiked ? "Unlike" : "Like"}</button>
     </Container>
   );
 };
